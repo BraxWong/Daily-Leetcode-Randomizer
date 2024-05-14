@@ -6,7 +6,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,7 +19,20 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  String question = "";
+
+  void searchQuestion(String question) {
+    this.setState((){
+      this.question = question;
+    });
+  }
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -28,7 +40,7 @@ class MyHomePage extends StatelessWidget {
         title: Text('Daily LeetCode Randomizer')
       ),
       body: Column(
-        children: <Widget>[AppSlogan(), SearchLeetCodeQuestion()]
+        children: <Widget>[AppSlogan(), SearchLeetCodeQuestion(this.searchQuestion), Text(this.question)]
       ) 
     );
   }
@@ -43,6 +55,14 @@ class AppSlogan extends StatelessWidget {
 
 //Taking constructor arguments and setting up override
 class SearchLeetCodeQuestion extends StatefulWidget {
+  final Function(String) callback;
+
+  /* 
+   * SearchLeetCodeQuestion constructor
+   */
+
+  SearchLeetCodeQuestion(this.callback);
+
   @override
   _SearchLeetCodeQuestionState createState() => _SearchLeetCodeQuestionState();
 }
@@ -74,6 +94,11 @@ class _SearchLeetCodeQuestionState extends State<SearchLeetCodeQuestion> {
     });
   }
 
+  void send() {
+    widget.callback(this.question);
+    controller.clear();
+  }
+
   @override
   Widget build(BuildContext context){
     return Column(
@@ -84,11 +109,16 @@ class _SearchLeetCodeQuestionState extends State<SearchLeetCodeQuestion> {
             prefixIcon: Icon(
               Icons.message
             ),
-            labelText: "Enter the name of a question that you want to practice."
+            labelText: "Enter the name of a question that you want to practice.",
+            suffixIcon: IconButton(
+              icon: Icon(Icons.send),
+              splashColor: Colors.blue,
+              tooltip: "Press send to get the question.",
+              onPressed: this.send,
+            )
           ),
           onChanged: (text) => this.setQuestion(text), 
         ),
-        Text(this.question)
       ]
     );
   }
