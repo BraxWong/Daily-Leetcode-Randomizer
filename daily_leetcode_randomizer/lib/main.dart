@@ -24,6 +24,23 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+class questionCompletionHistory {
+  String body;
+  String user;
+  int numOfCompletion;
+  bool userCompleted = false;
+
+  questionCompletionHistory(this.body, this.user)
+
+  void questionCompleted() {
+    this.userCompleted = !this.userCompleted;
+    if(this,userCompleted){
+      this.numOfCompletion +=1;
+    } else {
+      this.numOfCompletion -=1;
+    }
+  }
+}
 class _MyHomePageState extends State<MyHomePage> {
   String question = "";
 
