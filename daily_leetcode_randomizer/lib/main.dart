@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:daily_leetcode_randomizer/QuestionCompletionHistory.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,33 +25,16 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class questionCompletionHistory {
-  String body;
-  String user;
-  int numOfCompletion = 0;
-  bool userCompleted = false;
-
-  questionCompletionHistory(this.body, this.user);
-
-  void questionCompleted() {
-    this.userCompleted = !this.userCompleted;
-    if(this.userCompleted){
-      this.numOfCompletion +=1;
-    } else {
-      this.numOfCompletion -=1;
-    }
-  }
-}
 
 class _MyHomePageState extends State<MyHomePage> {
   String question = "";
-  List<questionCompletionHistory> history = [];
+  List<QuestionCompletionHistory> history = [];
 
   //TODO: Create a login page to store the username
   void searchQuestion(String question) {
     this.setState((){
       this.question = question;
-      history.add(new questionCompletionHistory(question, "Brax"));
+      history.add(new QuestionCompletionHistory(question, "Brax"));
     });
   }
 
@@ -146,7 +130,7 @@ class _SearchLeetCodeQuestionState extends State<SearchLeetCodeQuestion> {
 }
 
 class QuestionList extends StatefulWidget {
-  final List<questionCompletionHistory> questionList;
+  final List<QuestionCompletionHistory> questionList;
 
   QuestionList(this.questionList);
   @override
@@ -155,7 +139,7 @@ class QuestionList extends StatefulWidget {
 
 class _QuestionListState extends State<QuestionList> {
 
-  void questionCompleted(questionCompletionHistory question) {
+  void questionCompleted(QuestionCompletionHistory question) {
     this.setState((){
       question.questionCompleted();
     });
@@ -173,7 +157,7 @@ class _QuestionListState extends State<QuestionList> {
           child: Row(
             children: <Widget>[Expanded(child: ListTile(title: Text(question.body), 
                                                         subtitle: Text(question.user))),
-                               Text(question.numOfCompletion.toString()),
+                               Text("Number of completion: " + question.numOfCompletion.toString()),
                                Row(children: <Widget>[IconButton(icon: Icon(Icons.check),
                                                                  onPressed: () => questionCompleted(question))]                 
                                )]
