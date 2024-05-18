@@ -27,26 +27,30 @@ class MyHomePage extends StatefulWidget {
 class questionCompletionHistory {
   String body;
   String user;
-  int numOfCompletion;
+  int numOfCompletion = 0;
   bool userCompleted = false;
 
-  questionCompletionHistory(this.body, this.user)
+  questionCompletionHistory(this.body, this.user);
 
   void questionCompleted() {
     this.userCompleted = !this.userCompleted;
-    if(this,userCompleted){
+    if(this.userCompleted){
       this.numOfCompletion +=1;
     } else {
       this.numOfCompletion -=1;
     }
   }
 }
+
 class _MyHomePageState extends State<MyHomePage> {
   String question = "";
+  List<questionCompletionHistory> history = [];
 
+  //TODO: Create a login page to store the username
   void searchQuestion(String question) {
     this.setState((){
       this.question = question;
+      history.add(new questionCompletionHistory(question, "Brax"));
     });
   }
 
@@ -57,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('Daily LeetCode Randomizer')
       ),
       body: Column(
-        children: <Widget>[AppSlogan(), SearchLeetCodeQuestion(this.searchQuestion), Text(this.question)]
+        children: <Widget>[AppSlogan(), Expanded(child: QuestionList(this.history)), Expanded(child: SearchLeetCodeQuestion(this.searchQuestion))]
       ) 
     );
   }
@@ -137,6 +141,45 @@ class _SearchLeetCodeQuestionState extends State<SearchLeetCodeQuestion> {
           onChanged: (text) => this.setQuestion(text), 
         ),
       ]
+    );
+  }
+}
+
+class QuestionList extends StatefulWidget {
+  final List<questionCompletionHistory> questionList;
+
+  QuestionList(this.questionList);
+  @override
+  _QuestionListState createState() => _QuestionListState();
+}
+
+class _QuestionListState extends State<QuestionList> {
+
+  void questionCompleted(questionCompletionHistory question) {
+    this.setState((){
+      question.questionCompleted();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: this.widget.questionList.length,
+      //have context and index, use index to display specific item
+      //itemBuilder allows you to dictate how the item is going to be displayed
+      itemBuilder: (context, index) {
+        var question = this.widget.questionList[index];
+        return Card(
+          child: Row(
+            children: <Widget>[Expanded(child: ListTile(title: Text(question.body), 
+                                                        subtitle: Text(question.user))),
+                               Text(question.numOfCompletion.toString()),
+                               Row(children: <Widget>[IconButton(icon: Icon(Icons.check),
+                                                                 onPressed: () => questionCompleted(question))]                 
+                               )]
+          )
+        );
+      },
     );
   }
 }
