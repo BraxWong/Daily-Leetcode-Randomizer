@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:daily_leetcode_randomizer/QuestionCompletionHistory.dart';
+import 'QuestionCompletionHistory.dart';
+import 'HomePage.dart';
+import 'Login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MyHomePage(), 
+      home: Login(), 
     );
   }
 }
@@ -45,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('Daily LeetCode Randomizer')
       ),
       body: Column(
-        children: <Widget>[AppSlogan(), Expanded(child: QuestionList(this.history)), Expanded(child: SearchLeetCodeQuestion(this.searchQuestion))]
+        children: <Widget>[AppSlogan(), Expanded(child: QuestionList(this.history)), SearchLeetCodeQuestion(this.searchQuestion)]
       ) 
     );
   }
@@ -142,6 +144,8 @@ class _QuestionListState extends State<QuestionList> {
   void questionCompleted(QuestionCompletionHistory question) {
     this.setState((){
       question.questionCompleted();
+      //Gets rid of the keyboard when the user is done typing
+      FocusScope.of(context).unfocus();
     });
   }
 
@@ -158,8 +162,11 @@ class _QuestionListState extends State<QuestionList> {
             children: <Widget>[Expanded(child: ListTile(title: Text(question.body), 
                                                         subtitle: Text(question.user))),
                                Text("Number of completion: " + question.numOfCompletion.toString()),
-                               Row(children: <Widget>[IconButton(icon: Icon(Icons.check),
-                                                                 onPressed: () => questionCompleted(question))]                 
+                               Row(children: <Widget>[IconButton(
+                                                        icon: Icon(Icons.check),
+                                                        onPressed: () => questionCompleted(question),
+                                                        color: question.userCompleted ? Colors.green : Colors.black 
+                                                      )]                 
                                )]
           )
         );
