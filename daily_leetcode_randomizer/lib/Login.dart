@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'HomePage.dart';
 
 class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login')
+        title: Text('Account Login')
       ),
       body: Body() 
     );
@@ -23,6 +24,16 @@ class _BodyState extends State<Body> {
   TextEditingController usernameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   final ButtonStyle style = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
+
+  void login() {
+    //TODO: Need to use firebase to verify username and password combinations
+    this.username = usernameController.text;
+    this.password = passwordController.text;
+
+    //This is like a stack, if you press back it will navigate to whatever is on top of the stack
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
+  }
+
   @override
   Widget build(BuildContext context){
     return Align(alignment: Alignment.center,
@@ -32,12 +43,16 @@ class _BodyState extends State<Body> {
                         TextField(
                           controller: usernameController,
                           decoration: InputDecoration(
+                            border: new OutlineInputBorder(
+                              borderSide: new BorderSide()
+                            ),
                             prefixIcon: Icon(
                               Icons.person
                             ),
                             labelText: "Username",
                           ),                    
                         ),
+                        SizedBox(height: 10),
                         TextField(
                           controller: passwordController,
                           decoration: InputDecoration(
@@ -45,12 +60,16 @@ class _BodyState extends State<Body> {
                               Icons.password
                             ),
                             labelText: "Password",
+                            border: new OutlineInputBorder(
+                                borderSide: new BorderSide()
+                            )
                           ),
                         ),
+                        SizedBox(height: 16),
                         ElevatedButton(
                           style: style,
-                          onPressed: () {},
-                          child: const Text('Enabled'),
+                          onPressed: this.login,
+                          child: const Text('Login'),
                         )                 
                       ]
                     )
