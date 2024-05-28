@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'QuestionCompletionHistory.dart';
+import 'DailyQuestionGenerator.dart';
 
 class MyHomePage extends StatefulWidget {
   String username = "";
@@ -29,7 +30,10 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('Daily LeetCode Randomizer')
       ),
       body: Column(
-        children: <Widget>[AppSlogan(), Expanded(child: QuestionList(this.history)), SearchLeetCodeQuestion(this.searchQuestion)]
+        children: <Widget>[AppSlogan(),
+                          DailyQuestionGenerator(),
+                          Expanded(child: QuestionList(this.history)), 
+                          SearchLeetCodeQuestion(this.searchQuestion)]
       ) 
     );
   }
