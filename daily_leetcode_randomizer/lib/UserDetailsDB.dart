@@ -12,7 +12,7 @@ class UserDetailsDB {
   Future<int> create({required String username, required String password}) async {
     final database = await DB().database; 
     return await database.rawInsert(
-      '''INSERT INTO UsertDetails (username, password) VALUES (?,?)''',
+      '''INSERT INTO UserDetails (id, username, password) VALUES (?,?)''',
       [username, password],
     );
   }
@@ -22,8 +22,7 @@ class UserDetailsDB {
     final allUserDetails = await database.rawQuery(
       '''SELECT * from UserDetails'''
     );
-    return [];
-    //return allUserDetails.map((userDetails) => UserDetails.fromQafliteDatabase(userDetails)).toList();
+    return allUserDetails.map((userDetails) => UserDetails.fromSqfliteDatabase(userDetails)).toList();
   }
 
   Future<UserDetails> fetchById(int id) async {
@@ -32,7 +31,6 @@ class UserDetailsDB {
       '''SELECT * from UserDetails WHERE ID = ?''',
       [id]
     );
-    UserDetails userDetails = new UserDetails("USERNAME", "PASSWORD");
-    return userDetails; 
+    return UserDetails.fromSqfliteDatabase(userDetails.first);
   }
 }

@@ -4,7 +4,7 @@ class UserDetails {
   final String password;
 
   const UserDetails({
-    this.id,
+    required this.id,
     required this.username,
     required this.password,
   });

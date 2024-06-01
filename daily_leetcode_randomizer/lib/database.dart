@@ -45,6 +45,7 @@ class DB {
       onCreate: create,
       singleInstance: true,
     );
+    print('Inside of initializeDatabase()');
     return database; 
   }
 }

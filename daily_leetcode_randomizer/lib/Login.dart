@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as Path;
 import 'package:sqflite/sqflite.dart';
 import 'HomePage.dart';
 import 'database.dart';
 import 'UserDetails.dart';
+import 'UserDetailsDB.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -38,10 +39,9 @@ class _BodyState extends State<Body> {
     UserDetails userDetails = new UserDetails(id: 1, username: this.username, password: this.password);
 
     DB userDetailsDatabase = new DB();
-    userDetailsDatabase.initializeDatabase();
-    
+    print(UserDetailsDB().create(username: this.username, password: this.password));
     //This is like a stack, if you press back it will navigate to whatever is on top of the stack
-    //Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
   }
 
   @override
