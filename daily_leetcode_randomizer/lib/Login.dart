@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 import 'HomePage.dart';
-
+import 'database.dart';
+import 'UserDetails.dart';
 
 class Login extends StatelessWidget {
   @override
@@ -26,13 +30,18 @@ class _BodyState extends State<Body> {
   TextEditingController passwordController = new TextEditingController();
   final ButtonStyle style = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
-  void login() {
+  void login(){
     //TODO: Need to use firebase to verify username and password combinations
     this.username = usernameController.text;
     this.password = passwordController.text;
 
+    UserDetails userDetails = new UserDetails(id: 1, username: this.username, password: this.password);
+
+    DB userDetailsDatabase = new DB();
+    userDetailsDatabase.initializeDatabase();
+    
     //This is like a stack, if you press back it will navigate to whatever is on top of the stack
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
+    //Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
   }
 
   @override
