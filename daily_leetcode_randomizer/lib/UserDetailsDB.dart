@@ -12,7 +12,7 @@ class UserDetailsDB {
   Future<int> create({required String username, required String password}) async {
     final database = await DB().database; 
     return await database.rawInsert(
-      '''INSERT INTO UserDetails (id, username, password) VALUES (?,?)''',
+      '''INSERT INTO UserDetails (username, password) VALUES (?,?)''',
       [username, password],
     );
   }
@@ -32,5 +32,16 @@ class UserDetailsDB {
       [id]
     );
     return UserDetails.fromSqfliteDatabase(userDetails.first);
+  }
+
+  Future<bool> usernameExistsInDB(required String username) async {
+    fetchAll().then((userDetailsList) {
+      for(var userDetails in userDetailsList) {
+        if(userDetails.username == username) {
+          return true;
+        }
+      }
+      return false;
+    });
   }
 }
