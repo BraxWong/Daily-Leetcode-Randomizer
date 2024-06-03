@@ -39,13 +39,12 @@ class _BodyState extends State<Body> {
     UserDetails userDetails = new UserDetails(id: 1, username: this.username, password: this.password);
 
     DB userDetailsDatabase = new DB();
-    //TODO:: Create a function that checks if the username exists within the database
-    UserDetailsDB().create(username: this.username, password: this.password);
-    UserDetailsDB().fetchAll().then((userDetailsList) {
-      print(userDetailsList);
-      //for(var ud in userDetailsList) {
-        //print(ud.id);
-      //} 
+    UserDetailsDB().usernameExistsInDB(this.username).then((usernameExists) {
+      if(!usernameExists){
+        UserDetailsDB().create(username: this.username, password: this.password);
+      } else {
+        /*Falls through for now */
+      } 
     });
     
     //This is like a stack, if you press back it will navigate to whatever is on top of the stack

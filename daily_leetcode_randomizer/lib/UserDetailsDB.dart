@@ -34,14 +34,23 @@ class UserDetailsDB {
     return UserDetails.fromSqfliteDatabase(userDetails.first);
   }
 
-  Future<bool> usernameExistsInDB(required String username) async {
-    fetchAll().then((userDetailsList) {
-      for(var userDetails in userDetailsList) {
-        if(userDetails.username == username) {
-          return true;
-        }
+  Future<bool> usernameExistsInDB(String username) async {
+    final userDetailsList = await fetchAll();
+    for(var userDetails in userDetailsList){
+      if(userDetails.username == username){
+        return true;
       }
-      return false;
-    });
+    }
+    return false;
+  }
+
+  Future<bool> checkLoginCredentials(String username, String password) async {
+    final userDetailsList = await fetchAll();
+    for(var userDetails in userDetailsList) {
+      if(userDetails.username == username && userDetails.password == password){
+        return true;
+      }
+    }
+    return false;
   }
 }
