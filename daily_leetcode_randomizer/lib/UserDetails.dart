@@ -19,6 +19,24 @@ class UserDetails {
   String toString() {
     return 'UserDetails{id: $id, name: $username, password: $password}';
   }
+
+  bool checkPasswordStrength(String password){
+    bool hasUpperCase = false;
+    bool hasLowerCase = false;
+    final specialSymbolsRegEx = RegExp(r'''[^$*.[\]{}()?\-"'!@#%&/\\,><:;_~`+=]'''); 
+    password.runes.forEach((int rune) {
+      var character = new String.fromCharCode(rune);
+      if(character == character.toUpperCase()){
+        hasUpperCase = true;
+      } else if (character == character.toLowerCase()) {
+        hasLowerCase = true;
+      } 
+    });
+    if(hasUpperCase && hasLowerCase && password.length >= 8 && password.contains(specialSymbolsRegEx)){
+      return true;
+    }
+    return false;
+  }
 }
 
 

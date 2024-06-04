@@ -39,16 +39,23 @@ class _BodyState extends State<Body> {
     UserDetails userDetails = new UserDetails(id: 1, username: this.username, password: this.password);
 
     DB userDetailsDatabase = new DB();
-    UserDetailsDB().usernameExistsInDB(this.username).then((usernameExists) {
-      if(!usernameExists){
-        UserDetailsDB().create(username: this.username, password: this.password);
+    UserDetailsDB().checkLoginCredentials(this.username, this.password).then((loginSuccess) {
+      if(loginSuccess) {
+        //This is like a stack, if you press back it will navigate to whatever is on top of the stack
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
       } else {
-        /*Falls through for now */
-      } 
+        UserDetailsDB().usernameExistsInDB(this.username).then((usernameExists) {
+          if(!usernameExists){
+            print("Username not found. Creating a new account.");
+            UserDetailsDB().create(username: this.username, password: this.password);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
+          } else {
+            /*Falls through for now */
+            print("Incorrect password. Please try again.");
+          } 
+        });
+      }
     });
-    
-    //This is like a stack, if you press back it will navigate to whatever is on top of the stack
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
   }
 
   @override
