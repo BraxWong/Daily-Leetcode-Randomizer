@@ -11,10 +11,15 @@ class UserDetailsDB {
 
   Future<int> create({required String username, required String password}) async {
     final database = await DB().database; 
-    return await database.rawInsert(
-      '''INSERT INTO UserDetails (username, password) VALUES (?,?)''',
-      [username, password],
-    );
+    if(UserDetails(id: 1, username: username, password: password).checkPasswordStrength(password)){
+      return await database.rawInsert(
+        '''INSERT INTO UserDetails (username, password) VALUES (?,?)''',
+        [username, password],
+      );
+    } else {
+      print("Password has to consist a lower, upper case, and special character, it has to be 8 characters and longer.");
+      return -1;
+    }
   }
 
   Future<List<UserDetails>> fetchAll() async {

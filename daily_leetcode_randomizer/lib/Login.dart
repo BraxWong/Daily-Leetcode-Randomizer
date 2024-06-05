@@ -44,17 +44,24 @@ class _BodyState extends State<Body> {
         //This is like a stack, if you press back it will navigate to whatever is on top of the stack
         Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
       } else {
-        UserDetailsDB().usernameExistsInDB(this.username).then((usernameExists) {
-          if(!usernameExists){
-            print("Username not found. Creating a new account.");
-            UserDetailsDB().create(username: this.username, password: this.password);
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
-          } else {
-            /*Falls through for now */
-            print("Incorrect password. Please try again.");
-          } 
-        });
+        createNewAccount(username: this.username, password: this.password);      
       }
+    });
+  }
+
+  void createNewAccount({required String username, required String password}) {
+    UserDetailsDB().usernameExistsInDB(this.username).then((usernameExists) {
+      if(!usernameExists){
+        print("Username not found. Creating a new account.");
+        UserDetailsDB().create(username: this.username, password: this.password).then((validPassword) {
+          if(validPassword != -1) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
+          }
+        }); 
+      } else {
+        /*Falls through for now */
+        print("Incorrect password. Please try again.");
+      } 
     });
   }
 
