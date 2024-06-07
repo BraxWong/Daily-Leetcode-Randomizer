@@ -6,6 +6,7 @@ import 'HomePage.dart';
 import 'database.dart';
 import 'UserDetails.dart';
 import 'UserDetailsDB.dart';
+import "popUpWindow.dart";
 
 class Login extends StatelessWidget {
   @override
@@ -31,7 +32,7 @@ class _BodyState extends State<Body> {
   TextEditingController passwordController = new TextEditingController();
   final ButtonStyle style = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
-  void login(){
+  void login(BuildContext context){
     //TODO: Need to use firebase to verify username and password combinations
     this.username = usernameController.text;
     this.password = passwordController.text;
@@ -44,12 +45,12 @@ class _BodyState extends State<Body> {
         //This is like a stack, if you press back it will navigate to whatever is on top of the stack
         Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
       } else {
-        createNewAccount(username: this.username, password: this.password);      
+        createNewAccount(username: this.username, password: this.password, context: context);      
       }
     });
   }
 
-  void createNewAccount({required String username, required String password}) {
+  void createNewAccount({required String username, required String password, required BuildContext context}) {
     UserDetailsDB().usernameExistsInDB(this.username).then((usernameExists) {
       if(!usernameExists){
         print("Username not found. Creating a new account.");
@@ -60,6 +61,7 @@ class _BodyState extends State<Body> {
         }); 
       } else {
         /*Falls through for now */
+        PopUpWindow().showPopUpWindow(context, "Incorrect Password", "Incorrect password, please try again");
         print("Incorrect password. Please try again.");
       } 
     });
@@ -99,7 +101,7 @@ class _BodyState extends State<Body> {
                         SizedBox(height: 16),
                         ElevatedButton(
                           style: style,
-                          onPressed: this.login,
+                          onPressed: () => login(context),
                           child: const Text('Login'),
                         )                 
                       ]

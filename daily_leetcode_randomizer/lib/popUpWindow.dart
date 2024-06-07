@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 class PopUpWindow {
-  Future<void> showPopUpWindow(required String title, required String message) async {
+  Future<void> showPopUpWindow(BuildContext context, String title, String message) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (BuilderContext context) {
+      builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text(title),
-          content: const SinglChildScrollView(
+          title: Text(title),
+          content: SingleChildScrollView(
             child: ListBody(
               children: <Widget> [
                 Text(message)
