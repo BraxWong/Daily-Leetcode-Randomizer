@@ -53,16 +53,17 @@ class _BodyState extends State<Body> {
   void createNewAccount({required String username, required String password, required BuildContext context}) {
     UserDetailsDB().usernameExistsInDB(this.username).then((usernameExists) {
       if(!usernameExists){
-        print("Username not found. Creating a new account.");
         UserDetailsDB().create(username: this.username, password: this.password).then((validPassword) {
           if(validPassword != -1) {
             Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
+            PopUpWindow().showPopUpWindow(context, "Create New Account", "Username not found. Creating a new account");
+          } else {
+            PopUpWindow().showPopUpWindow(context, "Error", "The password has to consist at least 1 lower, upper case, and special character. The password has to be 8 characters long");
           }
         }); 
       } else {
         /*Falls through for now */
         PopUpWindow().showPopUpWindow(context, "Incorrect Password", "Incorrect password, please try again");
-        print("Incorrect password. Please try again.");
       } 
     });
   }
@@ -88,6 +89,7 @@ class _BodyState extends State<Body> {
                         SizedBox(height: 10),
                         TextField(
                           controller: passwordController,
+                          obscureText: true,
                           decoration: InputDecoration(
                             prefixIcon: Icon(
                               Icons.password

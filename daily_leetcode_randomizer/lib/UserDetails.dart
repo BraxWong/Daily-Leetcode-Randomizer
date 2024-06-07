@@ -23,7 +23,7 @@ class UserDetails {
   bool checkPasswordStrength(String password){
     bool hasUpperCase = false;
     bool hasLowerCase = false;
-    final specialSymbolsRegEx = RegExp(r'''[^$*.[\]{}()?\-"'!@#%&/\\,><:;_~`+=]'''); 
+    final specialSymbolsRegEx = RegExp(r'[!@#$%^&*(),.?":{}|<>]'); 
     password.runes.forEach((int rune) {
       var character = new String.fromCharCode(rune);
       if(character == character.toUpperCase()){
@@ -32,7 +32,7 @@ class UserDetails {
         hasLowerCase = true;
       } 
     });
-    if(hasUpperCase && hasLowerCase && password.length >= 8 && password.contains(specialSymbolsRegEx)){
+    if(hasUpperCase && hasLowerCase && password.length >= 8 && specialSymbolsRegEx.hasMatch(password)){
       return true;
     }
     return false;
