@@ -28,12 +28,13 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   String username = "";
   String password = "";
+  bool passwordVisible = false;
   TextEditingController usernameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   final ButtonStyle style = ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
+
   void login(BuildContext context){
-    //TODO: Need to use firebase to verify username and password combinations
     this.username = usernameController.text;
     this.password = passwordController.text;
 
@@ -62,7 +63,6 @@ class _BodyState extends State<Body> {
           }
         }); 
       } else {
-        /*Falls through for now */
         PopUpWindow().showPopUpWindow(context, "Incorrect Password", "Incorrect password, please try again");
       } 
     });
@@ -89,10 +89,21 @@ class _BodyState extends State<Body> {
                         SizedBox(height: 10),
                         TextField(
                           controller: passwordController,
-                          obscureText: true,
+                          obscureText: !this.passwordVisible,
                           decoration: InputDecoration(
                             prefixIcon: Icon(
                               Icons.password
+                            ),
+                            suffixIcon: IconButton(
+                                  icon: Icon(
+                                    this.passwordVisible ? Icons.visibility : Icons.visibility_off,
+                                    color: Theme.of(context).primaryColorDark,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                        this.passwordVisible = !this.passwordVisible;
+                                    });
+                                  },
                             ),
                             labelText: "Password",
                             border: new OutlineInputBorder(
@@ -109,5 +120,5 @@ class _BodyState extends State<Body> {
                       ]
                     )
                 ));
+    }
   }
-}
