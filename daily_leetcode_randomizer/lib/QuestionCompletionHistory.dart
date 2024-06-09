@@ -1,10 +1,22 @@
 class QuestionCompletionHistory {
-  String body;
-  String user;
+  final int id;
+  final String body;
+  final String user;
   int numOfCompletion = 0;
   bool userCompleted = false;
 
-  QuestionCompletionHistory(this.body, this.user);
+  const QuestionCompletionHistory({
+    required this.id,
+    required this.body,
+    required this.user,
+  });
+
+  factory QuestionCompletionHistory.fromSqfliteDatabase(Map<String, dynamic> map) => QuestionCompletionHistory(
+    id: map['id']?.toInt() ?? 0,
+    body: map['body'] ?? '',
+    user: map['user'] ?? '',
+    numOfCompletion: map['numOfCompletion']?.toInt() ?? 0
+  );
 
   void questionCompleted() {
     this.userCompleted = !this.userCompleted;
