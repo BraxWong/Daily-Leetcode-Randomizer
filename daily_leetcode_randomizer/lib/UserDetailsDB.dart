@@ -3,14 +3,14 @@ import 'database.dart';
 import 'UserDetails.dart';
 
 class UserDetailsDB {
-  final tableName = 'UserDetails';
-
+  final tableName = 'user_details_database.db';
+  
   Future<void> createTable(Database database) async {
     await database.execute('CREATE TABLE IF NOT EXISTS UserDetails(id INTEGER NOT NULL, username TEXT NOT NULL, password TEXT NOT NULL, PRIMARY KEY("id" AUTOINCREMENT))');    
   }
 
   Future<int> create({required String username, required String password}) async {
-    final database = await DB().database; 
+    final database = await DB(databaseName: this.tableName).database; 
     if(UserDetails(id: 1, username: username, password: password).checkPasswordStrength(password)){
       return await database.rawInsert(
         '''INSERT INTO UserDetails (username, password) VALUES (?,?)''',
@@ -23,7 +23,7 @@ class UserDetailsDB {
   }
 
   Future<List<UserDetails>> fetchAll() async {
-    final database = await DB().database;
+    final database = await DB(databaseName: this.tableName).database;
     final allUserDetails = await database.rawQuery(
       '''SELECT * from UserDetails'''
     );
@@ -31,7 +31,7 @@ class UserDetailsDB {
   }
 
   Future<UserDetails> fetchById(int id) async {
-    final database = await DB().database;
+    final database = await DB(databaseName: this.tableName).database;
     final userDetails = await database.rawQuery(
       '''SELECT * from UserDetails WHERE ID = ?''',
       [id]

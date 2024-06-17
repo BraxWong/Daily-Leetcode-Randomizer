@@ -40,7 +40,6 @@ class _BodyState extends State<Body> {
 
     UserDetails userDetails = new UserDetails(id: 1, username: this.username, password: this.password);
 
-    DB userDetailsDatabase = new DB();
     UserDetailsDB().checkLoginCredentials(this.username, this.password).then((loginSuccess) {
       if(loginSuccess) {
         //This is like a stack, if you press back it will navigate to whatever is on top of the stack

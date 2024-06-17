@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'QuestionCompletionHistory.dart';
 import 'DailyQuestionGenerator.dart';
+import 'QuestionCompletionHistoryDB.dart';
 
 class MyHomePage extends StatefulWidget {
   String username = "";
@@ -19,7 +20,13 @@ class _MyHomePageState extends State<MyHomePage> {
   void searchQuestion(String question) {
     this.setState((){
       this.question = question;
-      history.add(new QuestionCompletionHistory(question, this.widget.username));
+      history.add(new QuestionCompletionHistory(id: 1, question: this.question, user: this.widget.username));
+      QuestionCompletionHistoryDB().create(question: this.question, user: this.widget.username);
+      QuestionCompletionHistoryDB().fetchAll().then((list) {
+        for(var item in list){
+          print(item.question);
+        }
+      });
     });
   }
 
@@ -129,8 +136,6 @@ class _QuestionListState extends State<QuestionList> {
 
   void questionCompleted(QuestionCompletionHistory question) {
     this.setState((){
-      question.questionCompleted();
-      //Gets rid of the keyboard when the user is done typing
       FocusScope.of(context).unfocus();
     });
   }
@@ -145,13 +150,11 @@ class _QuestionListState extends State<QuestionList> {
         var question = this.widget.questionList[index];
         return Card(
           child: Row(
-            children: <Widget>[Expanded(child: ListTile(title: Text(question.body), 
+            children: <Widget>[Expanded(child: ListTile(title: Text(question.question), 
                                                         subtitle: Text(question.user))),
-                               Text("Number of completion: " + question.numOfCompletion.toString()),
                                Row(children: <Widget>[IconButton(
                                                         icon: Icon(Icons.check),
                                                         onPressed: () => questionCompleted(question),
-                                                        color: question.userCompleted ? Colors.green : Colors.black 
                                                       )]                 
                                )]
           )
