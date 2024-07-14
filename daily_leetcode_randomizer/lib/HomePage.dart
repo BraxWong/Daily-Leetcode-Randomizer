@@ -22,9 +22,10 @@ class _MyHomePageState extends State<MyHomePage> {
       this.question = question;
       history.add(new QuestionCompletionHistory(id: 1, question: this.question, user: this.widget.username));
       QuestionCompletionHistoryDB().create(question: this.question, user: this.widget.username);
-      QuestionCompletionHistoryDB().fetchAll().then((list) {
-        for(var item in list){
-          print(item.question);
+      QuestionCompletionHistoryDB().fetchByUsername(this.widget.username).then((list) {
+        history = list;
+        for(var q in history) {
+          print(q.question);
         }
       });
     });
@@ -49,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
 class AppSlogan extends StatelessWidget {
   @override
   Widget build(BuildContext context){
-    return Text('One LeetCode question a day and ace all of your technical interviews');
+    return Text('One LeetCode question a day, keep all the rejection letters away.');
   }
 }
 

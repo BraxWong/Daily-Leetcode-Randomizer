@@ -26,4 +26,13 @@ class QuestionCompletionHistoryDB {
     return allQuestionCompletionHistory.map((questionCompletionHistory) => QuestionCompletionHistory.fromSqfliteDatabase(questionCompletionHistory)).toList();
   }
 
+  Future<List<QuestionCompletionHistory>> fetchByUsername(String user) async {
+    final database = await DB(databaseName: this.tableName).database;
+    await createTable(database);
+    final allQuestionCompletionHistory = await database.rawQuery(
+      '''SELECT * from QuestionCompletionHistory WHERE user = ?''',
+      [user]
+    );
+    return allQuestionCompletionHistory.map((questionCompletionHistory) => QuestionCompletionHistory.fromSqfliteDatabase(questionCompletionHistory)).toList();
+  }
 }
