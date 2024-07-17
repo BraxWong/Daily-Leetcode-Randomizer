@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'QuestionCompletionHistory.dart';
 import 'DailyQuestionGenerator.dart';
 import 'QuestionCompletionHistoryDB.dart';
+import 'QuestionCompletionHistoryScreen.dart';
 
 class MyHomePage extends StatefulWidget {
   String username = "";
@@ -24,9 +25,6 @@ class _MyHomePageState extends State<MyHomePage> {
       QuestionCompletionHistoryDB().create(question: this.question, user: this.widget.username);
       QuestionCompletionHistoryDB().fetchByUsername(this.widget.username).then((list) {
         history = list;
-        for(var q in history) {
-          print(q.question);
-        }
       });
     });
   }
@@ -40,7 +38,15 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: <Widget>[AppSlogan(),
                           DailyQuestionGenerator(),
-                          Expanded(child: QuestionList(this.history)), 
+                          ElevatedButton(
+                            style: style,
+                            onPressed: () {
+                              QuestionCompletionHistoryDB().fetchByUsername(this.widget.user).then((list) {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionCompletionHistoryScreen(list)));
+                              });
+                            },
+                            child: const Text('Show question completion history'),
+                          ),
                           SearchLeetCodeQuestion(this.searchQuestion)]
       ) 
     );
@@ -125,42 +131,3 @@ class _SearchLeetCodeQuestionState extends State<SearchLeetCodeQuestion> {
   }
 }
 
-class QuestionList extends StatefulWidget {
-  final List<QuestionCompletionHistory> questionList;
-
-  QuestionList(this.questionList);
-  @override
-  _QuestionListState createState() => _QuestionListState();
-}
-
-class _QuestionListState extends State<QuestionList> {
-
-  void questionCompleted(QuestionCompletionHistory question) {
-    this.setState((){
-      FocusScope.of(context).unfocus();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: this.widget.questionList.length,
-      //have context and index, use index to display specific item
-      //itemBuilder allows you to dictate how the item is going to be displayed
-      itemBuilder: (context, index) {
-        var question = this.widget.questionList[index];
-        return Card(
-          child: Row(
-            children: <Widget>[Expanded(child: ListTile(title: Text(question.question), 
-                                                        subtitle: Text(question.user))),
-                               Row(children: <Widget>[IconButton(
-                                                        icon: Icon(Icons.check),
-                                                        onPressed: () => questionCompleted(question),
-                                                      )]                 
-                               )]
-          )
-        );
-      },
-    );
-  }
-}
