@@ -39,15 +39,16 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[AppSlogan(),
                           DailyQuestionGenerator(),
                           ElevatedButton(
-                            style: style,
                             onPressed: () {
-                              QuestionCompletionHistoryDB().fetchByUsername(this.widget.user).then((list) {
+                              QuestionCompletionHistoryDB().fetchByUsername(this.widget.username).then((list) {
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionCompletionHistoryScreen(list)));
                               });
                             },
                             child: const Text('Show question completion history'),
                           ),
-                          SearchLeetCodeQuestion(this.searchQuestion)]
+                          Spacer(),
+                          SearchLeetCodeQuestion(this.searchQuestion)
+                          ]
       ) 
     );
   }
