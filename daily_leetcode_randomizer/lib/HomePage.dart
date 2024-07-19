@@ -41,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ElevatedButton(
                             onPressed: () {
                               QuestionCompletionHistoryDB().fetchByUsername(this.widget.username).then((list) {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionCompletionHistoryScreen(list)));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionCompletionHistoryScreen(list, this.widget.username)));
                               });
                             },
                             child: const Text('Show question completion history'),

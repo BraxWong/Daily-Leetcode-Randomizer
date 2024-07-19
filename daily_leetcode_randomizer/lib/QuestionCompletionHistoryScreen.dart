@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'QuestionCompletionHistory.dart';
+import 'QuestionCompletionHistoryDB.dart';
 
 class QuestionCompletionHistoryScreen extends StatefulWidget {
   List<QuestionCompletionHistory> history = [];
 
-  QuestionCompletionHistoryScreen(this.history);
+  String username = "";
+
+  QuestionCompletionHistoryScreen(this.history, this.username);
 
   @override
   _QuestionCompletionHistoryScreenState createState() => _QuestionCompletionHistoryScreenState();
@@ -16,12 +19,12 @@ class _QuestionCompletionHistoryScreenState extends State<QuestionCompletionHist
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-          title: Text('Question Completion History')
+          title: Text(this.widget.username + '\'s\ Question Completion History')
       ),
       body: Column(
         children: <Widget>[
           SizedBox(height: 10),
-          Expanded(child: QuestionList(this.widget.history))
+          Expanded(child: QuestionList(this.widget.history, this.widget.username))
         ]
       )      
     );
@@ -29,9 +32,10 @@ class _QuestionCompletionHistoryScreenState extends State<QuestionCompletionHist
 }
 
 class QuestionList extends StatefulWidget {
-  final List<QuestionCompletionHistory> questionList;
+  List<QuestionCompletionHistory> questionList;
+  String username = "";
 
-  QuestionList(this.questionList);
+  QuestionList(this.questionList, this.username);
   @override
   _QuestionListState createState() => _QuestionListState();
 }
@@ -41,6 +45,13 @@ class _QuestionListState extends State<QuestionList> {
   void questionCompleted(QuestionCompletionHistory question) {
     this.setState((){
       FocusScope.of(context).unfocus();
+      QuestionCompletionHistoryDB().deleteQuestionByUsername(this.widget.username, question.question).then((list) {
+        this.widget.questionList.clear();
+        this.widget.questionList = list;
+        for(var q in list){
+          print(q.question);
+        }
+      }); 
     });
   }
 

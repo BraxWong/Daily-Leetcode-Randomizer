@@ -35,4 +35,14 @@ class QuestionCompletionHistoryDB {
     );
     return allQuestionCompletionHistory.map((questionCompletionHistory) => QuestionCompletionHistory.fromSqfliteDatabase(questionCompletionHistory)).toList();
   }
+
+  Future<List<QuestionCompletionHistory>> deleteQuestionByUsername(String user, String question) async {
+    final database = await DB(databaseName: this.tableName).database;
+    await createTable(database);
+    final allQuestionCompletionHistory = await database.rawQuery(
+      '''DELETE FROM QuestionCompletionHistory WHERE user = ? AND question = ?''',
+      [question, user]
+    );
+    return allQuestionCompletionHistory.map((questionCompletionHistory) => QuestionCompletionHistory.fromSqfliteDatabase(questionCompletionHistory)).toList();
+  }
 }
