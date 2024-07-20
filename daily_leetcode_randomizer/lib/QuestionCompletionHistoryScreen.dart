@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'QuestionCompletionHistory.dart';
 import 'QuestionCompletionHistoryDB.dart';
+import "popUpWindow.dart";
 
 class QuestionCompletionHistoryScreen extends StatefulWidget {
   List<QuestionCompletionHistory> history = [];
@@ -45,11 +46,14 @@ class _QuestionListState extends State<QuestionList> {
   void questionCompleted(QuestionCompletionHistory question) {
     this.setState((){
       FocusScope.of(context).unfocus();
+      int currentQuestionListLength = this.widget.questionList.length;
       QuestionCompletionHistoryDB().deleteQuestionByUsername(this.widget.username, question.question).then((list) {
         this.widget.questionList.clear();
         this.widget.questionList = list;
-        for(var q in list){
-          print(q.question);
+        if(currentQuestionListLength > this.widget.questionList.length) {
+          PopUpWindow().showPopUpWindow(context, "History removed", question.question + " has been removed from the history.");
+        } else {
+          PopUpWindow().showPopUpWindow(context, "Error", question.question + " is not found within the history.");
         }
       }); 
     });
