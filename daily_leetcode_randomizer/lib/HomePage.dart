@@ -21,8 +21,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void searchQuestion(String question) {
     this.setState((){
       this.question = question;
-      history.add(new QuestionCompletionHistory(id: 1, question: this.question, user: this.widget.username));
-      QuestionCompletionHistoryDB().create(question: this.question, user: this.widget.username);
+      history.add(new QuestionCompletionHistory(id: 1, question: this.question, user: this.widget.username, 1));
+      QuestionCompletionHistoryDB().create(question: this.question, user: this.widget.username, 1);
       QuestionCompletionHistoryDB().fetchByUsername(this.widget.username).then((list) {
         history = list;
       });
