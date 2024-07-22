@@ -70,7 +70,7 @@ class _QuestionListState extends State<QuestionList> {
         return Card(
           child: Row(
             children: <Widget>[Expanded(child: ListTile(title: Text(question.question), 
-                                                        subtitle: Text(question.user))),
+                                                        subtitle: Text("Number of Completions: " + question.numOfCompletion.toString()))),
                                Row(children: <Widget>[IconButton(
                                                         icon: Icon(Icons.check),
                                                         onPressed: () => questionCompleted(question),

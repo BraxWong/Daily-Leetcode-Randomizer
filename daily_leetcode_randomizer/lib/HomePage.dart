@@ -21,11 +21,19 @@ class _MyHomePageState extends State<MyHomePage> {
   void searchQuestion(String question) {
     this.setState((){
       this.question = question;
-      history.add(new QuestionCompletionHistory(id: 1, question: this.question, user: this.widget.username, 1));
-      QuestionCompletionHistoryDB().create(question: this.question, user: this.widget.username, 1);
-      QuestionCompletionHistoryDB().fetchByUsername(this.widget.username).then((list) {
-        history = list;
+      QuestionCompletionHistoryDB().findQuestionByUsername(this.widget.username, question).then((questionExistsInDatabase) {
+        if(questionExistsInDatabase == true) {
+          QuestionCompletionHistoryDB().incrementNumOfCompletion(this.widget.username, question).then((list) {
+            history = list;
+          }); 
+        } else {
+          QuestionCompletionHistoryDB().create(question: this.question, user: this.widget.username);
+          QuestionCompletionHistoryDB().fetchByUsername(this.widget.username).then((list) {
+            history = list;
+          });    
+        }
       });
+      //history.add(new QuestionCompletionHistory(id: 1, question: this.question, user: this.widget.username, 1));
     });
   }
 

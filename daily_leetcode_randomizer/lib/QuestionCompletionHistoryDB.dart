@@ -3,7 +3,7 @@ import 'database.dart';
 import 'QuestionCompletionHistory.dart';
 
 class QuestionCompletionHistoryDB {
-  final String tableName = 'question_completion_history_database.db';
+  final String tableName = 'question_completion_history_db.db';
   Future<void> createTable(Database database) async {
     await database.execute('CREATE TABLE IF NOT EXISTS QuestionCompletionHistory(id INTEGER NOT NULL, question TEXT NOT NULL, user TEXT NOT NULL, numOfCompletion INTEGER NOT NULL, PRIMARY KEY("id" AUTOINCREMENT))');
   }
@@ -58,5 +58,20 @@ class QuestionCompletionHistoryDB {
       [user, question]
     );
     return allQuestionCompletionHistory.map((questionCompletionHistory) => QuestionCompletionHistory.fromSqfliteDatabase(questionCompletionHistory)).toList().length > 0;
+  }
+
+  Future<List<QuestionCompletionHistory>> incrementNumOfCompletion(String user, String question) async {
+    final database = await DB(databaseName: this.tableName).database;
+    await createTable(database);
+    await database.rawQuery(
+      '''UPDATE questionCompletionHistory SET numOfCompletion = numOfCompletion + 1 WHERE user = ? AND question = ?''',
+      [user, question]
+    );
+    final allQuestionCompletionHistory = await database.rawQuery(
+      '''SELECT * from QuestionCompletionHistory WHERE user = ?''',
+      [user]
+    );
+    return allQuestionCompletionHistory.map((questionCompletionHistory) => QuestionCompletionHistory.fromSqfliteDatabase(questionCompletionHistory)).toList();
+
   }
 }
