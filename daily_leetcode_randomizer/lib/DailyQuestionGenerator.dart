@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
+import 'QuestionCompletionHistoryDB.dart';
+import 'QuestionCompletionHistory.dart';
+import 'popUpWindow.dart';
+
 
 class DailyQuestionGenerator extends StatefulWidget {
+
+  String username = "";
+
+  DailyQuestionGenerator(this.username);
+
   @override
   _DailyQuestionGeneratorState createState() => _DailyQuestionGeneratorState();
 }
@@ -14,14 +24,33 @@ class _DailyQuestionGeneratorState extends State<DailyQuestionGenerator> {
     this.setState(() {
       if(!questionGenerated)
       {
-        this.todayQuestion = Blind75QuestionBank().blind75QuestionMap.keys.elementAt(new Random().nextInt(map.length));
+        this.todayQuestion = Blind75QuestionBank().blind75QuestionMap.keys.elementAt(new Random().nextInt(Blind75QuestionBank().blind75QuestionMap.length));
         questionGenerated = true;
       }
       else
       {
-        this.todayQuestion = "You have completed the question for today, please come back tomorrow.";
+        PopUpWindow().showPopUpWindow(context, "Error", "You have generated today's problem. Please come back tomorrow ^_^");
       }
     });
+  }
+
+  void completeQuestion(){
+    if(questionGenerated == true) {
+      QuestionCompletionHistoryDB().findQuestionByUsername(this.widget.username, this.todayQuestion).then((questionExistsInDatabase) {
+        if(questionExistsInDatabase == true) {
+          QuestionCompletionHistoryDB().incrementNumOfCompletion(this.widget.username, this.todayQuestion);
+        } else {
+          QuestionCompletionHistoryDB().create(question: this.todayQuestion, user: this.widget.username);
+          QuestionCompletionHistoryDB().fetchByUsername(this.widget.username); 
+        }
+      });
+    } else {
+      PopUpWindow().showPopUpWindow(context, "Error", "You have not generate a question yet.");
+    }
+  }
+
+  void directToLeetCode() {
+    print(Blind75QuestionBank().blind75QuestionMap[this.todayQuestion]);
   }
 
   @override
@@ -38,11 +67,27 @@ class _DailyQuestionGeneratorState extends State<DailyQuestionGenerator> {
                 labelText: todayQuestion,
               ),
             ),
-            SizedBox(height: 10),
-            ElevatedButton(
-              child: const Text('Show Today\'s\ question'),
-              onPressed: this.generateQuestion
-            )
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ElevatedButton(
+                  child: const Text('Show Today\'s\ question'),
+                  onPressed: this.generateQuestion
+                ),
+                SizedBox(width: 15),
+                ElevatedButton(
+                  child: const Text('Complete on LeetCode!'),
+                  onPressed: this.directToLeetCode
+                ),
+                SizedBox(width: 15),
+                ElevatedButton(
+                  child: const Text('Completed Today\'s\ question'),
+                  onPressed: this.completeQuestion
+                )
+              ]
+            ),
+            SizedBox(height: 10)
           ]
         )
       )
@@ -83,7 +128,7 @@ class Blind75QuestionBank {
     "Binary Tree Level Order Traversal": "https://leetcode.com/problems/binary-tree-level-order-traversal/description/",
     "Validate Binary Search Tree": "https://leetcode.com/problems/validate-binary-search-tree/description/",
     "Kth Smallest Element in a BST": "https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/",
-    "Construct Binary Tree from Preorder and Inorder Traversal", "https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/description/",
+    "Construct Binary Tree from Preorder and Inorder Traversal": "https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/description/",
     "Binary Tree Maximum Path Sum": "https://leetcode.com/problems/binary-tree-maximum-path-sum/description/",
     "Serialize and Deserialize Binary Tree": "https://leetcode.com/problems/serialize-and-deserialize-binary-tree/description/",
     "Find Median from Data Stream": "https://leetcode.com/problems/find-median-from-data-stream/description/",

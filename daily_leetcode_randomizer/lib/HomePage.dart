@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: <Widget>[AppSlogan(),
-                          DailyQuestionGenerator(),
+                          DailyQuestionGenerator(this.widget.username),
                           ElevatedButton(
                             onPressed: () {
                               QuestionCompletionHistoryDB().fetchByUsername(this.widget.username).then((list) {
