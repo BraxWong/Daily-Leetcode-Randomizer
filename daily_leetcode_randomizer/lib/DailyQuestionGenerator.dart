@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:url_launcher/url_launcher.dart';
 import 'QuestionCompletionHistoryDB.dart';
 import 'QuestionCompletionHistory.dart';
 import 'popUpWindow.dart';
@@ -49,8 +50,15 @@ class _DailyQuestionGeneratorState extends State<DailyQuestionGenerator> {
     }
   }
 
-  void directToLeetCode() {
-    print(Blind75QuestionBank().blind75QuestionMap[this.todayQuestion]);
+  void directToLeetCode() async {
+    if(questionGenerated == true){
+      final Uri url = Uri.parse(Blind75QuestionBank().blind75QuestionMap[this.todayQuestion]);
+      if (!await launchUrl(url)) {
+        PopUpWindow().showPopUpWindow(context, "Error", "Unable to open up leetcode. Please try it again later.");    
+      }
+    } else {
+      PopUpWindow().showPopUpWindow(context, "Error", "You have not generate a question yet.");
+    }
   }
 
   @override
