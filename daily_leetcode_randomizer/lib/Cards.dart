@@ -25,17 +25,21 @@ class _MyCardState extends State<MyCard> {
   
   @override
   Widget build(BuildContext context){
-    return Center(
-      child: Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: Icon(this.widget.icon),
-              title: Text(this.widget.title),
-              subtitle: Text(this.widget.message.join('\n')), 
-            ),
-          ],
+    return SizedBox(
+      width: 300,
+      height: 100,
+      child:Center(
+        child: Card(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: Icon(this.widget.icon),
+                title: Text(this.widget.title),
+                subtitle: Text(this.widget.message.join('\n')), 
+              ),
+            ],
+          ),
         ),
       ),
     ); 

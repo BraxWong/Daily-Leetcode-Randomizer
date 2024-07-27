@@ -34,7 +34,6 @@ class _MyHomePageState extends State<MyHomePage> {
           });    
         }
       });
-      //history.add(new QuestionCompletionHistory(id: 1, question: this.question, user: this.widget.username, 1));
     });
   }
 
@@ -42,10 +41,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF42A5F5),
         title: Text('Daily LeetCode Randomizer')
       ),
       body: Column(
-        children: <Widget>[AppSlogan(),
+        children: <Widget>[SizedBox(height: 20),
+                          AppSlogan(),
                           DailyQuestionGenerator(this.widget.username),
                           ElevatedButton(
                             onPressed: () {
@@ -54,6 +55,10 @@ class _MyHomePageState extends State<MyHomePage> {
                               });
                             },
                             child: const Text('Show question completion history'),
+                          ),
+                          Container(
+                            alignment: Alignment.bottomLeft,
+                            child: MyCard(this.widget.username + "'s Progress:", ["Daily LeetCode Points: ", "Total LeetCode Points: "], Icons.play_arrow_rounded),
                           ),
                           Spacer(),
                           SearchLeetCodeQuestion(this.searchQuestion)
