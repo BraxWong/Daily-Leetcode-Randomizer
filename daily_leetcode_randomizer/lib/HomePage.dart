@@ -3,12 +3,16 @@ import 'QuestionCompletionHistory.dart';
 import 'DailyQuestionGenerator.dart';
 import 'QuestionCompletionHistoryDB.dart';
 import 'QuestionCompletionHistoryScreen.dart';
+import 'UserPointsHistory.dart';
+import 'UserPointsHistoryDB.dart';
 import 'Cards.dart';
 
 class MyHomePage extends StatefulWidget {
   String username = "";
+  int dailyPoints = 0;
+  int totalPoints = 0;
 
-  MyHomePage(this.username);
+  MyHomePage(this.username, this.dailyPoints, this.totalPoints);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -58,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           Container(
                             alignment: Alignment.bottomLeft,
-                            child: MyCard(this.widget.username + "'s Progress:", ["Daily LeetCode Points: ", "Total LeetCode Points: "], Icons.play_arrow_rounded),
+                            child: MyCard(this.widget.username + "'s Progress:", ["Daily LeetCode Points: " + this.widget.dailyPoints.toString(), "Total LeetCode Points: " + this.widget.totalPoints.toString()], Icons.play_arrow_rounded),
                           ),
                           Spacer(),
                           SearchLeetCodeQuestion(this.searchQuestion)

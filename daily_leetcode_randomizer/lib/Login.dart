@@ -6,6 +6,8 @@ import 'HomePage.dart';
 import 'database.dart';
 import 'UserDetails.dart';
 import 'UserDetailsDB.dart';
+import 'UserPointsHistory.dart';
+import 'UserPointsHistoryDB.dart';
 import "popUpWindow.dart";
 
 class Login extends StatelessWidget {
@@ -42,8 +44,17 @@ class _BodyState extends State<Body> {
 
     UserDetailsDB().checkLoginCredentials(this.username, this.password).then((loginSuccess) {
       if(loginSuccess) {
-        //This is like a stack, if you press back it will navigate to whatever is on top of the stack
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
+        UserPointsHistoryDB().userInUserPointsHistoryDB(this.username).then((userExists) {
+          if(userExists == true){
+            UserPointsHistoryDB().getUserPoints(this.username).then((userPoints) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username, userPoints.dailyPoints, userPoints.totalPoints)));
+            });
+          } else {
+            UserPointsHistoryDB().create(username: this.username);
+            //This is like a stack, if you press back it will navigate to whatever is on top of the stack
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username, 0, 0)));
+          }
+        });
       } else {
         createNewAccount(username: this.username, password: this.password, context: context);      
       }
@@ -55,7 +66,7 @@ class _BodyState extends State<Body> {
       if(!usernameExists){
         UserDetailsDB().create(username: this.username, password: this.password).then((validPassword) {
           if(validPassword != -1) {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage(this.username, 0, 0)));
             PopUpWindow().showPopUpWindow(context, "Create New Account", "Username not found. Creating a new account");
           } else {
             PopUpWindow().showPopUpWindow(context, "Error", "The password has to consist at least 1 lower, upper case, and special character. The password has to be 8 characters long");
