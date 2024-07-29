@@ -37,6 +37,9 @@ class _MyHomePageState extends State<MyHomePage> {
             history = list;
           });    
         }
+        UserPointsHistoryDB().incrementUserTotalPoints(this.widget.username).then((userList) {
+          print(userList.totalPoints.toString());    
+        });
       });
     });
   }

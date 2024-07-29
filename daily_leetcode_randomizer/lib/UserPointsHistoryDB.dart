@@ -67,7 +67,7 @@ class UserPointsHistoryDB {
   Future<bool> userInUserPointsHistoryDB(String username) async {
     final userPointsList = await fetchAll(); 
     for (var userPoints in userPointsList){
-      if(userPoints.user == username){
+      if(userPoints.username == username){
         return true;
       }
     }

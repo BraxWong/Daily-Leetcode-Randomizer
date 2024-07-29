@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:url_launcher/url_launcher.dart';
 import 'QuestionCompletionHistoryDB.dart';
 import 'QuestionCompletionHistory.dart';
+import 'UserPointsHistoryDB.dart';
 import 'popUpWindow.dart';
 
 
@@ -44,6 +45,7 @@ class _DailyQuestionGeneratorState extends State<DailyQuestionGenerator> {
           QuestionCompletionHistoryDB().create(question: this.todayQuestion, user: this.widget.username);
           QuestionCompletionHistoryDB().fetchByUsername(this.widget.username); 
         }
+        UserPointsHistoryDB().incrementUserDailyPoints(this.widget.username);
       });
     } else {
       PopUpWindow().showPopUpWindow(context, "Error", "You have not generate a question yet.");
