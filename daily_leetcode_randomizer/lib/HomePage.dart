@@ -6,6 +6,7 @@ import 'QuestionCompletionHistoryScreen.dart';
 import 'UserPointsHistory.dart';
 import 'UserPointsHistoryDB.dart';
 import 'Cards.dart';
+import 'Login.dart';
 
 class MyHomePage extends StatefulWidget {
   String username = "";
@@ -38,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
           });    
         }
         UserPointsHistoryDB().incrementUserTotalPoints(this.widget.username).then((userList) {
-          print(userList.totalPoints.toString());    
+          this.widget.totalPoints = userList.totalPoints;
         });
       });
     });
@@ -49,24 +50,54 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF42A5F5),
-        title: Text('Daily LeetCode Randomizer')
+        title: Text('Daily LeetCode Randomizer'),
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                UserPointsHistoryDB().getUserPoints(this.widget.username).then((userPoints) {
+                  this.widget.dailyPoints = userPoints.dailyPoints;
+                  this.widget.totalPoints = userPoints.totalPoints;
+                  Scaffold.of(context).openDrawer();
+                });
+              },
+            );
+          },
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children:[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(this.widget.username + "'s Progress:\nDaily LeetCode Points: " + this.widget.dailyPoints.toString() + "\nTotal LeetCode Points: " + this.widget.totalPoints.toString()),
+            ),
+            ListTile(
+              title: const Text('Question Completion History'),
+              onTap: () {
+                QuestionCompletionHistoryDB().fetchByUsername(this.widget.username).then((list) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionCompletionHistoryScreen(list, this.widget.username)));
+                });
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Logout'),
+              onTap: () {
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Login()),(Route<dynamic> route) => false);
+              },
+            ),
+          ],
+        ), 
       ),
       body: Column(
         children: <Widget>[SizedBox(height: 20),
                           AppSlogan(),
                           DailyQuestionGenerator(this.widget.username),
-                          ElevatedButton(
-                            onPressed: () {
-                              QuestionCompletionHistoryDB().fetchByUsername(this.widget.username).then((list) {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => QuestionCompletionHistoryScreen(list, this.widget.username)));
-                              });
-                            },
-                            child: const Text('Show question completion history'),
-                          ),
-                          Container(
-                            alignment: Alignment.bottomLeft,
-                            child: MyCard(this.widget.username + "'s Progress:", ["Daily LeetCode Points: " + this.widget.dailyPoints.toString(), "Total LeetCode Points: " + this.widget.totalPoints.toString()], Icons.play_arrow_rounded),
-                          ),
                           Spacer(),
                           SearchLeetCodeQuestion(this.searchQuestion)
                           ]
