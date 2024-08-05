@@ -56,10 +56,12 @@ class _MyHomePageState extends State<MyHomePage> {
             return IconButton(
               icon: const Icon(Icons.menu),
               onPressed: () {
-                UserPointsHistoryDB().getUserPoints(this.widget.username).then((userPoints) {
-                  this.widget.dailyPoints = userPoints.dailyPoints;
-                  this.widget.totalPoints = userPoints.totalPoints;
-                  Scaffold.of(context).openDrawer();
+                this.setState((){
+                  UserPointsHistoryDB().getUserPoints(this.widget.username).then((userPoints) {
+                    this.widget.dailyPoints = userPoints.dailyPoints;
+                    this.widget.totalPoints = userPoints.totalPoints;
+                    Scaffold.of(context).openDrawer();
+                  });
                 });
               },
             );
@@ -86,11 +88,17 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
+              title: const Text('Leaderboard'),
+              onTap: () {
+                print("Coming Soon");
+              },
+            ),
+            ListTile(
               title: const Text('Logout'),
               onTap: () {
                 Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Login()),(Route<dynamic> route) => false);
               },
-            ),
+            )
           ],
         ), 
       ),

@@ -42,6 +42,15 @@ class UserPointsHistoryDB {
     return UserPointsHistory.fromSqfliteDatabase(userPoints.first);
   }
 
+  Future<void> decrementUserTotalPoints(String username, String decrementAmount) async {
+    final database = await DB(databaseName: this.tableName).database;
+    await createTable(database);
+    await database.rawQuery(
+      '''UPDATE UserPointsHistory SET totalPoints = totalPoints - ? WHERE username = ?''',
+      [decrementAmount, username]
+    );
+  }
+
   Future<UserPointsHistory> incrementUserTotalPoints(String username) async {
     final database = await DB(databaseName: this.tableName).database;
     await createTable(database);

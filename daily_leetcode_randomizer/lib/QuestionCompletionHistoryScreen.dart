@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'QuestionCompletionHistory.dart';
 import 'QuestionCompletionHistoryDB.dart';
+import 'UserPointsHistoryDB.dart';
 import "popUpWindow.dart";
 
 class QuestionCompletionHistoryScreen extends StatefulWidget {
@@ -51,6 +52,7 @@ class _QuestionListState extends State<QuestionList> {
         this.widget.questionList.clear();
         this.widget.questionList = list;
         if(currentQuestionListLength > this.widget.questionList.length) {
+          UserPointsHistoryDB().decrementUserTotalPoints(this.widget.username, question.numOfCompletion.toString());
           PopUpWindow().showPopUpWindow(context, "History removed", question.question + " has been removed from the history.");
         } else {
           PopUpWindow().showPopUpWindow(context, "Error", question.question + " is not found within the history.");
