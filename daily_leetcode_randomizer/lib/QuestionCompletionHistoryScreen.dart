@@ -52,7 +52,7 @@ class _QuestionListState extends State<QuestionList> {
         this.widget.questionList.clear();
         this.widget.questionList = list;
         if(currentQuestionListLength > this.widget.questionList.length) {
-          UserPointsHistoryDB().decrementUserTotalPoints(this.widget.username, question.numOfCompletion.toString());
+          UserPointsHistoryDB().decrementUserTotalPoints(this.widget.username, question.numOfCompletion);
           PopUpWindow().showPopUpWindow(context, "History removed", question.question + " has been removed from the history.");
         } else {
           PopUpWindow().showPopUpWindow(context, "Error", question.question + " is not found within the history.");
