@@ -5,6 +5,7 @@ import 'QuestionCompletionHistoryDB.dart';
 import 'QuestionCompletionHistoryScreen.dart';
 import 'UserPointsHistory.dart';
 import 'UserPointsHistoryDB.dart';
+import 'Leaderboard.dart';
 import 'Cards.dart';
 import 'Login.dart';
 
@@ -90,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Leaderboard'),
               onTap: () {
-                print("Coming Soon");
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Leaderboard()));
               },
             ),
             ListTile(
