@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Leaderboard'),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Leaderboard()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LeaderboardScreen()));
               },
             ),
             ListTile(
