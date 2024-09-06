@@ -8,16 +8,6 @@ class LeaderboardScreen extends StatefulWidget {
 }
 
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
-  List<UserPointsHistory> userPointsHistory = [];
-  @override
-  void initState() {
-    super.initState();  
-    _getLeaderboardData();
-  }
-
-  Future<void> _getLeaderboardData() async {
-    userPointsHistory = await UserPointsHistoryDB().fetchAll();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +17,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       ),
       body: Column(
         children: <Widget>[
-          Leaderboard(userPointsHistory)
+          Leaderboard()
         ]
       ),
     );
@@ -35,8 +25,6 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
 }
 
 class Leaderboard extends StatefulWidget {
-  List<UserPointsHistory> userPointsHistory = [];
-  Leaderboard(this.userPointsHistory);
 
   @override
   _LeaderboardState createState() => _LeaderboardState();
@@ -44,8 +32,32 @@ class Leaderboard extends StatefulWidget {
 }
 
 class _LeaderboardState extends State<Leaderboard> {
+
+  List<UserPointsHistory> userPointsHistory=[];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();  
+    _getLeaderboardData();
+  }
+
+  Future<void> _getLeaderboardData() async {
+    userPointsHistory = await UserPointsHistoryDB().fetchAll();
+    //The following statement is used to sort the UserPointsHistory List by the object's dailyPoints member variable.
+    userPointsHistory.sort((a,b) => a.dailyPoints.compareTo(b.dailyPoints));
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context){
+    if (isLoading == true){
+      return Center(
+        child: CircularProgressIndicator()
+      );
+    }
     return Table(
       border: TableBorder.all(),
       columnWidths: const <int, TableColumnWidth>{
@@ -73,7 +85,7 @@ class _LeaderboardState extends State<Leaderboard> {
             ),
           ],
         ),
-        ...this.widget.userPointsHistory.asMap().entries.map((entry) {
+        ...this.userPointsHistory.asMap().entries.map((entry) {
           int index = entry.key;
           var userPoints = entry.value;
           return TableRow(
